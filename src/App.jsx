@@ -1,22 +1,48 @@
-import React, { useState } from "react";
+import { React, useEffect, useState } from "react";
+
+// To get data from Local stroge
+const getLocalItems = () => {
+  let list = localStorage.getItem("list");
+  console.log(list);
+  if (list) {
+    return JSON.parse(localStorage.getItem("list"));
+  } else {
+    return [];
+  }
+};
 
 const App = () => {
+  const [isActive, setIsActive] = useState(1);
   const [title, setTitle] = useState("");
   const [disc, setDisc] = useState("");
-  const [mainTask, setMainTask] = useState([]);
+  const [mainTask, setMainTask] = useState(getLocalItems());
 
-
- // Submit Handeler
+  // Submit Handeler
   const handelSUbmit = (e) => {
     e.preventDefault(); //remove default Reload Browser
-    setMainTask([...mainTask, { title, disc }]);
-
-    // if the input area is emty it will be error / alert 
+    // if the input area is emty it will be error / alert
     const t = title.trim();
     const d = disc.trim();
     if (!t || !d) {
       alert("Emty todo will not add. ");
+      return;
     }
+
+    // Time Update
+    let now = new Date();
+    let dd = now.getDate();
+    let m = now.getMinutes();
+    let h = now.getHours();
+    let mm = now.getMonth() + 1;
+    let yy = now.getFullYear();
+    let ampm = h >= 12 ? "PM" : "AM";
+
+    // 0 case handle (12AM)
+    h = h % 12;
+    h = h ? h : 12;
+    let onTime = h + ":" + m + " " + ampm + " at " + dd + "/" + mm + "/" + yy;
+
+    setMainTask([...mainTask, { title, disc, onTime }]);
 
     setTitle("");
     setDisc("");
@@ -29,6 +55,12 @@ const App = () => {
     setMainTask(copymain);
   };
 
+  // Local Storage Data Save
+
+  useEffect(() => {
+    localStorage.setItem("list", JSON.stringify(mainTask));
+  }, [mainTask]);
+
   return (
     <>
       <main className="h-auto">
@@ -40,10 +72,9 @@ const App = () => {
         </h1>
 
         <div className="maindiv">
-
           <form onSubmit={handelSUbmit}>
-            <div className="flex flex-col md:flex-row gap-5 md:gap-10">
-              <div>
+            <div className="flex   flex-col md:flex-row gap-5 md:gap-5">
+              <div className="">
                 <p className="text-[#fbf6f8] text-sm md:text-lg font-semibold pb-2">
                   Title
                 </p>
@@ -56,7 +87,7 @@ const App = () => {
                   onChange={(e) => setTitle(e.target.value)}
                 />
               </div>
-              <div>
+              <div className="">
                 <p className="text-[#fbf6f8] text-sm md:text-base font-semibold pb-2  ">
                   Description
                 </p>
@@ -67,9 +98,7 @@ const App = () => {
                   value={disc}
                   onChange={(e) => setDisc(e.target.value)}
                 />
-                <button className="addTaskButton">
-                  Add Task
-                </button>
+                <button className="addTaskButton">Add Task</button>
               </div>
             </div>
           </form>
@@ -77,29 +106,40 @@ const App = () => {
           {/* Horizontal Row */}
           <div className="w-full h-[0.5px] mb-5 bg-gray-400"></div>
 
-          <div className="flex flex-wrap mb-4 mt-8">
-            <div className="todoButton">
+          <div className="flex mb-4 mt-8">
+            <button
+              onClick={() => setIsActive(1)}
+              className={`todoButton ${
+                isActive === 1 ? "bg-[#1ccc89]" : "bg-[#424a47]"
+              }`}
+            >
               Todo
-            </div>
-            <div className="completedButton">
+            </button>
+            <button
+              onClick={() => setIsActive(2)}
+              className={`todoButton ${
+                isActive === 2 ? "bg-[#1ccc89]" : "bg-[#424a47]"
+              }`}
+            >
               Completed
-            </div>
+            </button>
           </div>
 
           <div className="">
             {mainTask.length > 0 ? (
-              (mainTask.map((i, index) => (
+              mainTask.map((i, index) => (
                 <ul key={index}>
                   <li className="flex justify-between gap-3 px-5 mb-4 bg-[#404040]  rounded py-6 md:py-6 ">
                     <div>
                       <h1 className=" text-xl md:text-3xl font-semibold  text-[#01e57e]">
                         {i.title}
                       </h1>
-                      <h3 className=" text-sm text-[#989898] ">{i.disc}</h3>
+                      <h3 className=" text-sm text-[#b4b1b1] ">{i.disc}</h3>
+                      <p className=" text-[10px] text-[#989898] flex justify-self-end items-center ">
+                        (Update On : {i.onTime})
+                      </p>
                     </div>
-                    <p className="text-[#b4b1b1] text-xs flex justify-self-end items-center ">
-                      Time: {}
-                    </p>
+
                     <div className="flex gap-2 md:gap-4">
                       <button
                         onClick={() => {
@@ -124,7 +164,7 @@ const App = () => {
                     </div>
                   </li>
                 </ul>
-              )))
+              ))
             ) : (
               <h1 className=" notusk ">No Task Here. Please Add a task.. </h1>
             )}
