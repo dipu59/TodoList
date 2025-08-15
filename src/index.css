@@ -28,9 +28,4 @@ body{
     .todoButton {
         @apply  active:scale-95 transition-all cursor-pointer font-semibold py-2 px-3 text-sm text-white
     }
-    .active{
-        @apply 
-    }
-
-
 }
