@@ -3,5 +3,34 @@
 body{
     font-family: Arial, Helvetica, sans-serif;
     font-weight: normal;
-    background-color: aliceblue;
+    background-color: #1e1e1e;
+}
+
+@layer components{
+    .maindiv{
+        @apply md:w-1/2 w-[83%] scroll-auto scroll-mb-1.5 mx-auto bg-[#343434] p-6 md:p-10 shadow-2xl rounded-lg
+    }
+    .notusk{
+        @apply font-medium text-base text-center py-2 text-rose-500 hover:animate-pulse
+    }
+    .mainHeading{
+        @apply text-4xl md:text-5xl bg-transparent p-3 rounded-2xl text-white my-5 text-center font-semibold
+    }
+    .titleInput{
+        @apply bg-[#ffffff]  md:text-sm p-2 outline-none after:outline-2 after:outline-[#17da7d] ring-2 ring-[#17da7d] rounded h-8 text-sm w-full md:w-auto
+    }
+    .descriptionInput{
+        @apply bg-[#ffffff] md:text-sm p-2 outline-none after:outline-2 after:outline-[#17da7d] ring-2 ring-[#17da7d] rounded h-8 text-sm w-full md:w-auto
+    }
+    .addTaskButton{
+        @apply text-white bg-gradient-to-b mt-3 md:mt-0 md:mx-3 mb-6 from-green-600 to-green-400 px-4 py-2 rounded-tr-3xl rounded-bl-2xl text-sm font-semibold cursor-pointer active:scale-95 transition-all
+    }
+    .todoButton {
+        @apply bg-[#1ccc89] active:scale-95 transition-all cursor-pointer font-semibold py-2 px-3 text-sm text-white
+    }
+    .completedButton{
+        @apply bg-[#424a47] font-semibold cursor-pointer active:scale-95 transition-all py-2 px-3 text-sm text-white
+    }
+
+
 }
